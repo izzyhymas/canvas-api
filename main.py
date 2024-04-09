@@ -1,6 +1,6 @@
 import os
 
-from models import Course, Discussion
+from models import Course, Discussion, DiscussionEntry
 
 from dotenv import load_dotenv
 import requests
@@ -23,7 +23,7 @@ headers: dict[str, str] = {
 @app.get("/courses")
 async def get_courses() -> list[Course]:
     response = requests.get(url=f"{base_url}/courses", headers=headers)
-    r_json = (response.json())
+    r_json = response.json()
 
     courses: list[Course] = []
     for course_json in r_json:
@@ -35,7 +35,7 @@ async def get_courses() -> list[Course]:
 @app.get("/discussions")
 async def get_discussions(course_id: int) -> list[Discussion]:
     response = requests.get(url=f"{base_url}/courses/{course_id}/discussion_topics", headers=headers)
-    r_json = (response.json())
+    r_json = response.json()
 
     discussions: list[Course] = []
     for discussion_json in r_json:
@@ -43,3 +43,9 @@ async def get_discussions(course_id: int) -> list[Discussion]:
         discussions.append(discussion)
 
     return discussions
+
+@app.post("/discussions/entry")
+async def post_discussion(course_id: int, topic_id: int, body: DiscussionEntry):
+    response = requests.post(url=f"{base_url}/courses/{course_id}/discussion_topics/{topic_id}/entries", headers=headers, data=body.model_dump())
+    r_json = response.json()
+    return

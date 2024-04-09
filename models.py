@@ -9,3 +9,6 @@ class Discussion(BaseModel):
     id: int
     title: str
     user_name: str
+
+class DiscussionEntry(BaseModel):
+    message: str
